@@ -1,0 +1,18 @@
+---
+services:
+  frontend_build:
+    image: akvo/akvo-node-20-alpine:20250923.063900.7ce4b53
+    container_name: frontend_build
+    env_file: "./app.env"
+    working_dir: /app
+    environment:
+      - CI_COMMIT=${CI_COMMIT}
+    command:
+      - /bin/bash
+      - -c
+      - |
+        echo 'WEBDOMAIN=${WEBDOMAIN}' >> frontend/.env
+        echo 'NEXT_AUTH_SECRET_KEY=${SECRET_KEY}' >> frontend/.env
+        cd frontend && yarn install --no-progress --frozen-lock && yarn build
+    volumes:
+      - ..:/app:delegated
